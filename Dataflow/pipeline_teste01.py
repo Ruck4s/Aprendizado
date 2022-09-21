@@ -30,7 +30,7 @@ transformacao = (
     |"Apagar colunas" >> beam.Map(apagar_coluna)
     |"Transformar em dicionario" >> beam.Map(df_para_dicionario)
     |"Escrever resultado" >> beam.io.WriteToText("/home/ruckert/testes/resultados.txt")
-    |"Mostrar resultados" >> beam.Map(print)
+    |"Mostrar resultados" >> beam.Map(print) #OPCIONAL
 )
 
 pipeline.run()
