@@ -7,19 +7,26 @@ import pandas as pd
 
 pipeline = beam.Pipeline()
 
-def apagar_coluna(df):
+def apagar_linhas(df):
     df = pd.read_csv("/home/ruckert/testes/age_gender.csv")
-    data = df.drop(columns=['img_name', 'pixels'])
-    return data
+    df_remove = df[df.index > 1000].index
+    new_df = df.drop(df_remove)
+    return new_df
 
-def df_para_dicionario(data):
+def apagar_coluna(new_df):
+    df = new_df
+    data = df.drop(columns=['img_name', 'pixels'])
+    return df_final
+
+def df_para_dicionario(df_final):
     d = dict([(i, [a, b]) for i, a, b in zip(
-        data['age'], data['ethnicity'], data['gender'])])
+        df_final['age'], df_final['ethnicity'], df_final['gender'])])
     print(d)
 
 transformacao = (
     pipeline
     |"Leitura do arquivo" >> beam.io.ReadFromText("/home/ruckert/testes/age_gender.csv", skip_header_lines=1)
+    |"Apaga linhas" >> beam.Map(apagar_linhas)
     |"Apagar colunas" >> beam.Map(apagar_coluna)
     |"Transformar em dicionario" >> beam.Map(df_para_dicionario)
     |"Escrever resultado" >> beam.io.WriteToText("/home/ruckert/testes/resultados.txt")
