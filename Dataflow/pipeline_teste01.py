@@ -15,7 +15,7 @@ def apagar_linhas(df):
 
 def apagar_coluna(new_df):
     df = new_df
-    data = df.drop(columns=['img_name', 'pixels'])
+    df_final = df.drop(columns=['img_name', 'pixels'])
     return df_final
 
 def df_para_dicionario(df_final):
